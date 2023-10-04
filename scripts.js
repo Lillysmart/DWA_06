@@ -90,10 +90,16 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
     document.documentElement.style.setProperty('--color-light', '255, 255, 255');
 }
 */ 
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
 
-document.querySelector('[data-list-button]').innerHTML = `
+ const dataListButton =document.querySelector('[data-list-button]')
+
+if ((matches.length - (page * BOOKS_PER_PAGE)) > 0){
+dataListButton.disabled===true &&  (matches.length - (page * BOOKS_PER_PAGE))}else {
+ // dataListButton.innerText = `Show more (${books.length - BOOKS_PER_PAGE})
+ 0
+}
+
+dataListButton.innerHTML = `
     <span>Show more</span>
     <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
 `
