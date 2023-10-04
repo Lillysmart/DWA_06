@@ -1,3 +1,4 @@
+
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 
 let page = 1;
@@ -80,7 +81,10 @@ const setColorSchemeProperties = (isDark) => {
     isDark ? lightColor : darkColor
   );
 };
-
+/**
+ * a function that checks what theme the user selected and 
+ * calls the function setColorSchemeProperties() to set the color scheme .
+ */
 const handlePreferredColorScheme = () => {
   if (
     window.matchMedia &&
