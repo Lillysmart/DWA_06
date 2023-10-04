@@ -28,6 +28,7 @@ const dataListItems = document.querySelector('[data-list-items]')
 dataListItems.appendChild(starting)
 
 const genreHtml = document.createDocumentFragment()
+
 const firstGenreElement = document.createElement('option')
 firstGenreElement.value = 'any'
 firstGenreElement.innerText = 'All Genres'
@@ -40,9 +41,11 @@ for (const [id, name] of Object.entries(genres)) {
     genreHtml.appendChild(element)
 }
 
-document.querySelector('[data-search-genres]').appendChild(genreHtml)
+const dataSearchGenre =document.querySelector('[data-search-genres]')
+dataSearchGenre.appendChild(genreHtml)
 
 const authorsHtml = document.createDocumentFragment()
+
 const firstAuthorElement = document.createElement('option')
 firstAuthorElement.value = 'any'
 firstAuthorElement.innerText = 'All Authors'
