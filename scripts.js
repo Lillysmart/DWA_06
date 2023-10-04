@@ -61,12 +61,13 @@ for (const [id, name] of Object.entries(authors)) {
 const dataSearchAuthor = document.querySelector('[data-search-authors]')
 dataSearchAuthor.appendChild(authorsHtml)
 
+const dataSettingTheme = document.querySelector('[data-settings-theme]')
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.querySelector('[data-settings-theme]').value = 'night'
+       dataSettingTheme.value = 'night'
     document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
     document.documentElement.style.setProperty('--color-light', '10, 10, 20');
 } else {
-    document.querySelector('[data-settings-theme]').value = 'day'
+    dataSettingTheme.value = 'day'
     document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
     document.documentElement.style.setProperty('--color-light', '255, 255, 255');
 }
