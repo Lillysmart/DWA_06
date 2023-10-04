@@ -58,7 +58,8 @@ for (const [id, name] of Object.entries(authors)) {
     authorsHtml.appendChild(element)
 }
 
-document.querySelector('[data-search-authors]').appendChild(authorsHtml)
+const dataSearchAuthor = document.querySelector('[data-search-authors]')
+dataSearchAuthor.appendChild(authorsHtml)
 
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.querySelector('[data-settings-theme]').value = 'night'
