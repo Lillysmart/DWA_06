@@ -61,6 +61,24 @@ for (const [id, name] of Object.entries(authors)) {
 const dataSearchAuthor = document.querySelector('[data-search-authors]')
 dataSearchAuthor.appendChild(authorsHtml)
 
+const setColorSchemeProperties =(isDark)=> {
+  const darkColor = '255, 255, 255';
+  const lightColor = '10, 10, 20';
+
+  document.documentElement.style.setProperty('--color-dark', isDark ? darkColor : lightColor);
+  document.documentElement.style.setProperty('--color-light', isDark ? lightColor : darkColor);
+}
+
+const handlePreferredColorScheme =()=> {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      dataSettingTheme.value = 'night'; // Set the data attribute value
+      setColorSchemeProperties(true); // Set dark color scheme
+  } else {
+      setColorSchemeProperties(false); // Set light color scheme
+  }
+}
+handlePreferredColorScheme();
+/*
 const dataSettingTheme = document.querySelector('[data-settings-theme]')
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
        dataSettingTheme.value = 'night'
@@ -71,7 +89,7 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
     document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
     document.documentElement.style.setProperty('--color-light', '255, 255, 255');
 }
-
+*/ 
 document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
 document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
 
