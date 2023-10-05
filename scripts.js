@@ -164,8 +164,9 @@ const dataSettingForm =document.querySelector("[data-settings-form]")
 const formHandle =(event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const { theme } = Object.fromEntries(formData);
-    if (theme === "night") {
+    const {theme}= Object.fromEntries(formData)
+    if (theme ==="night")
+     {
       document.documentElement.style.setProperty(
         "--color-dark",
         "255, 255, 255"
