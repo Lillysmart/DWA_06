@@ -60,13 +60,14 @@ for (const [id, name] of Object.entries(authors)) {
 
 const dataSearchAuthor = document.querySelector("[data-search-authors]");
 dataSearchAuthor.appendChild(authorsHtml);
+/*
 
 /**
  * a function that Sets CSS custom properties for a color scheme based on the specified mode.
  * @param {boolean} isDark - A boolean indicating whether the color scheme
  * should be set to dark mode
  *
- */
+ *//*
 const setColorSchemeProperties = (isDark) => {
   const darkColor = "255, 255, 255";
   const lightColor = "10, 10, 20";
@@ -83,7 +84,7 @@ const setColorSchemeProperties = (isDark) => {
 /**
  * a function that checks what theme the user selected and
  * calls the function setColorSchemeProperties() to set the color scheme .
- */
+ *//*
 const handlePreferredColorScheme = () => {
   if (
     window.matchMedia &&
@@ -95,7 +96,7 @@ const handlePreferredColorScheme = () => {
     setColorSchemeProperties(false); // Set light color scheme
   }
 };
-handlePreferredColorScheme();
+handlePreferredColorScheme();*/ 
 
 /*
 const dataSettingTheme = document.querySelector('[data-settings-theme]')
@@ -161,55 +162,65 @@ document.querySelector("[data-list-close]").addEventListener("click", () => {
   document.querySelector("[data-list-active]").open = false;
 });
 const dataSettingForm = document.querySelector("[data-settings-form]");
-
+/**
+ * Handles the submission of a form.
+ * 
+ * @param {Event} event - The form submission event object.
+ */
 const formHandle = (event) => {
   event.preventDefault();
   const formData = new FormData(event.target);
-  const { theme } = Object.fromEntries(formData);
-  if (theme === "night") {
-    document.documentElement.style.setProperty("--color-dark", "255, 255, 255");
-    document.documentElement.style.setProperty("--color-light", "10, 10, 20");
-  } else {
-    document.documentElement.style.setProperty("--color-dark", "10, 10, 20");
-    document.documentElement.style.setProperty("--color-light", "255, 255, 255"
-    );
-  }
+  const theme = formData.get("theme");
 
-  document.querySelector("[data-settings-overlay]").open = false;
+  // Define color variables for day and night themes
+  const dayColors = {
+    "--color-dark": "10, 10, 20",
+    "--color-light": "255, 255, 255",
+   
+  };
+
+  const nightColors = {
+    "--color-dark": "255, 255, 255",
+    "--color-light": "10, 10, 20",
+  };
+
+  const themeColors = theme==="day"? dayColors: nightColors
+
+  
+  for (const [property, value] of Object.entries(themeColors)) {
+    document.documentElement.style.setProperty(property, value);
+  }
+  dataSettingOverlay.open = false;
 };
 
 dataSettingForm.addEventListener("submit", formHandle);
 
-document
-  .querySelector("[data-search-form]")
-  .addEventListener("submit", (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const filters = Object.fromEntries(formData);
-    const result = [];
+const dataSearchForm =document.querySelector("[data-search-form]")
+dataSearchForm.addEventListener('submit', (event) => {
+  event.preventDefault()
+  const formData = new FormData(event.target)
+  const filters = Object.fromEntries(formData)
+  const result = []
+  for (const book of books) {
+    let genreMatch = filters.genre === 'any'
 
-    for (const book of books) {
-      let genreMatch = filters.genre === "any";
-
-      for (const singleGenre of book.genres) {
+    for (const singleGenre of book.genres) {
         if (genreMatch) break;
-        if (singleGenre === filters.genre) {
-          genreMatch = true;
-        }
-      }
-
-      if (
-        (filters.title.trim() === "" ||
-          book.title.toLowerCase().includes(filters.title.toLowerCase())) &&
-        (filters.author === "any" || book.author === filters.author) &&
-        genreMatch
-      ) {
-        result.push(book);
-      }
+        if (singleGenre === filters.genre) { genreMatch = true }
     }
 
-    page = 1;
-    matches = result;
+  
+      if (
+          (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
+          (filters.author === 'any' || book.author === filters.author) && 
+          genreMatch
+      ) {
+          result.push(book)
+      }
+  }
+    
+  page = 1;
+  matches = result
 
     if (result.length < 1) {
       document
@@ -246,6 +257,7 @@ document
 
       newItems.appendChild(element);
     }
+
 
     document.querySelector("[data-list-items]").appendChild(newItems);
     document.querySelector("[data-list-button]").disabled =
