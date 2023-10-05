@@ -1,4 +1,3 @@
-
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 
 let page = 1;
@@ -82,7 +81,7 @@ const setColorSchemeProperties = (isDark) => {
   );
 };
 /**
- * a function that checks what theme the user selected and 
+ * a function that checks what theme the user selected and
  * calls the function setColorSchemeProperties() to set the color scheme .
  */
 const handlePreferredColorScheme = () => {
@@ -97,7 +96,6 @@ const handlePreferredColorScheme = () => {
   }
 };
 handlePreferredColorScheme();
-
 
 /*
 const dataSettingTheme = document.querySelector('[data-settings-theme]')
@@ -117,9 +115,11 @@ const dataListButton = document.querySelector("[data-list-button]");
 
 if (matches.length - page * BOOKS_PER_PAGE > 0) {
   //dataListButton.disabled === true && matches.length - page * BOOKS_PER_PAGE;
-  dataListButton.innerText = ` Show more ${matches.length - page * BOOKS_PER_PAGE}`
+  dataListButton.innerText = ` Show more ${
+    matches.length - page * BOOKS_PER_PAGE
+  }`;
 } else {
-  0
+  0;
 }
 
 /*dataListButton.innerHTML = `
@@ -131,19 +131,20 @@ if (matches.length - page * BOOKS_PER_PAGE > 0) {
     })</span>
 `;
 */
-const dataSearchCancel = document.querySelector("[data-search-cancel]")
-const dataSearchOverlay = document.querySelector("[data-search-overlay]")
+const dataSearchCancel = document.querySelector("[data-search-cancel]");
+const dataSearchOverlay = document.querySelector("[data-search-overlay]");
 
-const handleDatasearchOverlay =()=>{
-    dataSearchOverlay.open = false;
-}
+const handleDatasearchOverlay = () => {
+  dataSearchOverlay.open = false;
+};
 dataSearchCancel.addEventListener("click", handleDatasearchOverlay);
 
-const dataSettingCancel =document.querySelector("[data-settings-cancel]")
-const dataSettingOverlay =document.querySelector("[data-settings-overlay]")
+const dataSettingCancel = document.querySelector("[data-settings-cancel]");
+const dataSettingOverlay = document.querySelector("[data-settings-overlay]");
 
-dataSettingCancel.addEventListener("click", ()=>{dataSettingOverlay.open = false;})
-    
+dataSettingCancel.addEventListener("click", () => {
+  dataSettingOverlay.open = false;
+});
 
 document.querySelector("[data-header-search]").addEventListener("click", () => {
   document.querySelector("[data-search-overlay]").open = true;
@@ -159,31 +160,25 @@ document
 document.querySelector("[data-list-close]").addEventListener("click", () => {
   document.querySelector("[data-list-active]").open = false;
 });
-const dataSettingForm =document.querySelector("[data-settings-form]")
+const dataSettingForm = document.querySelector("[data-settings-form]");
 
-const formHandle =(event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const {theme}= Object.fromEntries(formData)
-    if (theme ==="night")
-     {
-      document.documentElement.style.setProperty(
-        "--color-dark",
-        "255, 255, 255"
-      );
-      document.documentElement.style.setProperty("--color-light", "10, 10, 20");
-    } else {
-      document.documentElement.style.setProperty("--color-dark", "10, 10, 20");
-      document.documentElement.style.setProperty(
-        "--color-light",
-        "255, 255, 255"
-      );
-    }
+const formHandle = (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const { theme } = Object.fromEntries(formData);
+  if (theme === "night") {
+    document.documentElement.style.setProperty("--color-dark", "255, 255, 255");
+    document.documentElement.style.setProperty("--color-light", "10, 10, 20");
+  } else {
+    document.documentElement.style.setProperty("--color-dark", "10, 10, 20");
+    document.documentElement.style.setProperty("--color-light", "255, 255, 255"
+    );
+  }
 
-    document.querySelector("[data-settings-overlay]").open = false;
-  };
+  document.querySelector("[data-settings-overlay]").open = false;
+};
 
-  dataSettingForm.addEventListener("submit", formHandle)
+dataSettingForm.addEventListener("submit", formHandle);
 
 document
   .querySelector("[data-search-form]")
@@ -192,8 +187,6 @@ document
     const formData = new FormData(event.target);
     const filters = Object.fromEntries(formData);
     const result = [];
-
-    
 
     for (const book of books) {
       let genreMatch = filters.genre === "any";
