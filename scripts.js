@@ -97,6 +97,8 @@ const handlePreferredColorScheme = () => {
   }
 };
 handlePreferredColorScheme();
+
+
 /*
 const dataSettingTheme = document.querySelector('[data-settings-theme]')
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -111,15 +113,16 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
 */
 
 const dataListButton = document.querySelector("[data-list-button]");
+//dataListButton.innerText = ` (${books.length - BOOKS_PER_PAGE})`
 
 if (matches.length - page * BOOKS_PER_PAGE > 0) {
-  dataListButton.disabled === true && matches.length - page * BOOKS_PER_PAGE;
+  //dataListButton.disabled === true && matches.length - page * BOOKS_PER_PAGE;
+  dataListButton.innerText = ` Show more ${matches.length - page * BOOKS_PER_PAGE}`
 } else {
-  // dataListButton.innerText = `Show more (${books.length - BOOKS_PER_PAGE})
-  0;
+  0
 }
 
-dataListButton.innerHTML = `
+/*dataListButton.innerHTML = `
     <span>Show more</span>
     <span class="list__remaining"> (${
       matches.length - page * BOOKS_PER_PAGE > 0
@@ -127,16 +130,20 @@ dataListButton.innerHTML = `
         : 0
     })</span>
 `;
+*/
+const dataSearchCancel = document.querySelector("[data-search-cancel]")
+const dataSearchOverlay = document.querySelector("[data-search-overlay]")
 
-document.querySelector("[data-search-cancel]").addEventListener("click", () => {
-  document.querySelector("[data-search-overlay]").open = false;
-});
+const handleDatasearchOverlay =()=>{
+    dataSearchOverlay.open = false;
+}
+dataSearchCancel.addEventListener("click", handleDatasearchOverlay);
 
-document
-  .querySelector("[data-settings-cancel]")
-  .addEventListener("click", () => {
-    document.querySelector("[data-settings-overlay]").open = false;
-  });
+const dataSettingCancel =document.querySelector("[data-settings-cancel]")
+const dataSettingOverlay =document.querySelector("[data-settings-overlay]")
+
+dataSettingCancel.addEventListener("click", ()=>{dataSettingOverlay.open = false;})
+    
 
 document.querySelector("[data-header-search]").addEventListener("click", () => {
   document.querySelector("[data-search-overlay]").open = true;
@@ -152,14 +159,12 @@ document
 document.querySelector("[data-list-close]").addEventListener("click", () => {
   document.querySelector("[data-list-active]").open = false;
 });
+const dataSettingForm =document.querySelector("[data-settings-form]")
 
-document
-  .querySelector("[data-settings-form]")
-  .addEventListener("submit", (event) => {
+const formHandle =(event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const { theme } = Object.fromEntries(formData);
-
     if (theme === "night") {
       document.documentElement.style.setProperty(
         "--color-dark",
@@ -175,7 +180,9 @@ document
     }
 
     document.querySelector("[data-settings-overlay]").open = false;
-  });
+  };
+
+  dataSettingForm.addEventListener("submit", formHandle)
 
 document
   .querySelector("[data-search-form]")
@@ -184,6 +191,8 @@ document
     const formData = new FormData(event.target);
     const filters = Object.fromEntries(formData);
     const result = [];
+
+    
 
     for (const book of books) {
       let genreMatch = filters.genre === "any";
