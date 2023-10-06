@@ -112,7 +112,6 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
 */
 
 const dataListButton = document.querySelector("[data-list-button]");
-//dataListButton.innerText = ` (${books.length - BOOKS_PER_PAGE})`
 
 if (matches.length - page * BOOKS_PER_PAGE > 0) {
   //dataListButton.disabled === true && matches.length - page * BOOKS_PER_PAGE;
@@ -298,10 +297,18 @@ const updateResults = (filteredBooks) => {
   window.scrollTo({ top: 0, behavior: "smooth" });
   dataSearchOverlay.open =false
 };
-
 dataSearchForm.addEventListener('submit',handleFormSubmission )
-
-document.querySelector("[data-list-button]").addEventListener("click", () => {
+/**
+ * Handles the behavior for displaying and updating the list of items.
+ *
+ * This function is responsible for managing the behavior related to displaying and updating
+ * the list of items based on filtering and pagination. It handles the addition of new items,
+ * pagination controls, and item display based on the 'matches' data.
+ *
+ * @function
+ * @returns {void}
+ */
+const newDataListHandle= () => {
   const fragment = document.createDocumentFragment();
 
   for (const { author, id, image, title } of matches.slice(
@@ -327,13 +334,25 @@ document.querySelector("[data-list-button]").addEventListener("click", () => {
     fragment.appendChild(element);
   }
 
-  document.querySelector("[data-list-items]").appendChild(fragment);
+  dataListItems.appendChild(fragment);
   page += 1;
-});
+};
 
-document
-  .querySelector("[data-list-items]")
-  .addEventListener("click", (event) => {
+dataListButton.addEventListener("click",newDataListHandle)
+
+/**
+ * Handles the click event on preview items, displaying additional book details.
+ *
+ * This function is designed to be triggered when a preview item is clicked. It searches for
+ * the clicked item's data-preview attribute in the event path and retrieves the corresponding
+ * book's information from the 'books' array. It then updates the details view elements to
+ * display the book's image, title, author, publication year, and description.
+ *
+ * @function
+ * @param {Event} event - The click event that triggered this function.
+ * @returns {void}
+ */
+ const newDataListItemsHandle= (event) => {
     const pathArray = Array.from(event.path || event.composedPath());
     let active = null;
 
@@ -363,4 +382,6 @@ document
       document.querySelector("[data-list-description]").innerText =
         active.description;
     }
-  });
+  };
+
+  dataListItems.addEventListener("click",newDataListItemsHandle)
