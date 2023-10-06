@@ -196,85 +196,110 @@ const formHandle = (event) => {
 dataSettingForm.addEventListener("submit", formHandle);
 
 const dataSearchForm =document.querySelector("[data-search-form]")
-dataSearchForm.addEventListener('submit', (event) => {
-  event.preventDefault()
-  const formData = new FormData(event.target)
-  const filters = Object.fromEntries(formData)
-  const result = []
-  for (const book of books) {
-    let genreMatch = filters.genre === 'any'
 
-    for (const singleGenre of book.genres) {
-        if (genreMatch) break;
-        if (singleGenre === filters.genre) { genreMatch = true }
-    }
+const result = []  
+page = 1;
+matches = result
 
-  
-      if (
-          (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
-          (filters.author === 'any' || book.author === filters.author) && 
-          genreMatch
-      ) {
-          result.push(book)
-      }
+/**
+ * Handle form submission.
+ *
+ * @param {Event} event - The form submission event.
+ */
+const handleFormSubmission=(event)=> {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const filters = Object.fromEntries(formData);
+  const filteredBooks = filterBooks(books, filters);
+  updateResults(filteredBooks);
+}
+
+/**
+ * Filter an array of books based on criteria.
+ *
+ * @param {Array} books - The array of books to filter.
+ * @param {Object} filters - An object containing filter criteria.
+ * @returns {Array} - An array of filtered books.
+ */
+const  filterBooks=(books, filters)=> {
+  return books.filter((book) => {
+    const genreMatch =
+      filters.genre === 'any' || book.genres.includes(filters.genre);
+
+    const titleMatch =
+      filters.title.trim() === '' ||
+      book.title.toLowerCase().includes(filters.title.toLowerCase());
+
+    const authorMatch =
+      filters.author === 'any' || book.author === filters.author;
+
+    return genreMatch && titleMatch && authorMatch;
+  });
+}
+const dataListMessage=   document.querySelector("[data-list-message]")
+/**
+ * Update the results based on the filtered books.
+ *
+ * @param {Array} filteredBooks - The array of filtered books.
+ */
+const updateResults = (filteredBooks) => {
+  const dataListMessage = document.querySelector("[data-list-message]");
+  const resultList = document.querySelector("[data-list-items]");
+  const showMoreButton = document.querySelector("[data-list-button]");
+
+  // Clear the existing results
+  resultList.innerHTML = "";
+
+  // Check if there are no filtered books
+  if (filteredBooks.length === 0) {
+    dataListMessage.classList.add("list__message_show");
+  } else {
+    dataListMessage.classList.remove("list__message_show");
   }
-    
-  page = 1;
-  matches = result
 
-    if (result.length < 1) {
-      document
-        .querySelector("[data-list-message]")
-        .classList.add("list__message_show");
-    } else {
-      document
-        .querySelector("[data-list-message]")
-        .classList.remove("list__message_show");
-    }
+  // Determine the range of books to display based on pagination
+  const startIndex = (page - 1) * BOOKS_PER_PAGE;
+  const endIndex = startIndex + BOOKS_PER_PAGE;
 
-    document.querySelector("[data-list-items]").innerHTML = "";
-    const newItems = document.createDocumentFragment();
+  // Create and append elements for the filtered books within the specified range
+  const fragment = document.createDocumentFragment();
+  for (let i = startIndex; i < endIndex && i < filteredBooks.length; i++) {
+    const book = filteredBooks[i];
 
-    for (const { author, id, image, title } of result.slice(
-      0,
-      BOOKS_PER_PAGE
-    )) {
-      const element = document.createElement("button");
-      element.classList = "preview";
-      element.setAttribute("data-preview", id);
+    const element = document.createElement("button");
+    element.classList = "preview";
+    element.setAttribute("data-preview", book.id);
 
-      element.innerHTML = `
-            <img
-                class="preview__image"
-                src="${image}"
-            />
-            
-            <div class="preview__info">
-                <h3 class="preview__title">${title}</h3>
-                <div class="preview__author">${authors[author]}</div>
-            </div>
-        `;
-
-      newItems.appendChild(element);
-    }
-
-
-    document.querySelector("[data-list-items]").appendChild(newItems);
-    document.querySelector("[data-list-button]").disabled =
-      matches.length - page * BOOKS_PER_PAGE < 1;
-
-    document.querySelector("[data-list-button]").innerHTML = `
-        <span>Show more</span>
-        <span class="list__remaining"> (${
-          matches.length - page * BOOKS_PER_PAGE > 0
-            ? matches.length - page * BOOKS_PER_PAGE
-            : 0
-        })</span>
+    element.innerHTML = `
+      <img
+        class="preview__image"
+        src="${book.image}"
+      />
+      <div class="preview__info">
+        <h3 class="preview__title">${book.title}</h3>
+        <div class="preview__author">${authors[book.author]}</div>
+      </div>
     `;
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelector("[data-search-overlay]").open = false;
-  });
+    fragment.appendChild(element);
+  }
+
+  resultList.appendChild(fragment);
+
+  // Update the "Show more" button state
+  const remainingBooks = filteredBooks.length - endIndex;
+  showMoreButton.disabled = remainingBooks <= 0;
+  showMoreButton.innerHTML = `
+    <span>Show more</span>
+    <span class="list__remaining"> (${remainingBooks > 0 ? remainingBooks : 0})</span>
+  `;
+
+  // Scroll to the top of the page
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  dataSearchOverlay.open =false
+};
+
+dataSearchForm.addEventListener('submit',handleFormSubmission )
 
 document.querySelector("[data-list-button]").addEventListener("click", () => {
   const fragment = document.createDocumentFragment();
